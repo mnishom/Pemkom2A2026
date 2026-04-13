@@ -9,6 +9,7 @@ public class LogAbsensi {
     private String status;
 
     public LogAbsensi() {
+        //
     }
 
     public LogAbsensi(String idLog, String uidRfid, LocalDateTime waktuTap, String status) {
