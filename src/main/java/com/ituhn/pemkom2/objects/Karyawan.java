@@ -7,10 +7,9 @@ public class Karyawan {
     private String namaLengkap;
     private String departemen;
 
-    public Karyawan(){
-        
+    public Karyawan() {
     }
-    
+
     public Karyawan(String uidRfid, String idKaryawan, String namaLengkap, String departemen) {
         this.uidRfid = uidRfid;
         this.idKaryawan = idKaryawan;
@@ -18,12 +17,15 @@ public class Karyawan {
         this.departemen = departemen;
     }
 
-    public String getDepartemen() {
-        return departemen;
-    }
+    
 
-    public void setDepartemen(String departemen) {
-        this.departemen = departemen;
+    @Override
+    public String toString() {
+        return "Karyawan{" + 
+                "uidRfid=" + uidRfid + 
+                ", idKaryawan=" + idKaryawan + 
+                ", namaLengkap=" + namaLengkap + 
+                ", departemen=" + departemen + '}';
     }
 
     public String getUidRfid() {
@@ -50,13 +52,12 @@ public class Karyawan {
         this.namaLengkap = namaLengkap;
     }
 
-    @Override
-    public String toString() {
-        return "Karyawan{" + 
-                "uidRfid=" + uidRfid + 
-                ", idKaryawan=" + idKaryawan + 
-                ", namaLengkap=" + namaLengkap + 
-                ", departemen=" + departemen + '}';
+    public String getDepartemen() {
+        return departemen;
+    }
+
+    public void setDepartemen(String departemen) {
+        this.departemen = departemen;
     }
     
     
