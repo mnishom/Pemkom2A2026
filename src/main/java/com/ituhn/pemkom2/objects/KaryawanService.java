@@ -14,13 +14,11 @@ import java.awt.event.ActionEvent;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import org.bson.Document;
 import org.bson.conversions.Bson;
 
 /**
@@ -156,14 +154,10 @@ public class KaryawanService {
                     );
 
                     switch (choice) {
-                        case JOptionPane.YES_OPTION:
-                            hapusKaryawan(k.getIdKaryawan());
-                            break;
-                        case JOptionPane.NO_OPTION:
-                            System.out.println("User memilih: Batal");
-                            break;
-                        default:
-                            break;
+                        case JOptionPane.YES_OPTION -> hapusKaryawan(k.getIdKaryawan());
+                        case JOptionPane.NO_OPTION -> System.out.println("User memilih: Batal");
+                        default -> {
+                        }
                     }
                 });
 
@@ -199,7 +193,6 @@ public class KaryawanService {
      */
     public List<Karyawan> cariKaryawan(String key) {
         List<Bson> filters = new ArrayList<>();
-
         // Get all fields from the Karyawan class
         for (Field field : Karyawan.class.getDeclaredFields()) {
             // Skip the uidRfid field and non-string fields if necessary
@@ -208,7 +201,6 @@ public class KaryawanService {
             }
             filters.add(Filters.regex(field.getName(), key, "i"));
         }
-
         // Search and return Karyawan objects directly
         List<Karyawan> results = DAO.findMany(Filters.or(filters));
         return results;
@@ -217,7 +209,6 @@ public class KaryawanService {
     /**
      * 4.UPDATE: Memperbarui data karyawan menggunakan filter Bson [5], [6]
      *
-     * @param idK
      * @param newK
      */
     public void updateKaryawan(Karyawan newK) {
