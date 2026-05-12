@@ -5,6 +5,7 @@
 package com.ituhn.pemkom2;
 
 import com.ituhn.pemkom2.gui.AdminPage;
+import com.ituhn.pemkom2.services.SerialService;
 import java.awt.Frame;
 
 /**
@@ -12,12 +13,28 @@ import java.awt.Frame;
  * @author mnish
  */
 public class MainApp extends javax.swing.JFrame {
-
+    
     /**
      * Creates new form MainApp
      */
     public MainApp() {
-        initComponents();
+        // 1. Koneksi sekali saja saat aplikasi start
+        SerialService.getInstance().connect("COM3", 9600);
+
+        // 2. Tambahkan Global Observer (misal untuk Logging)
+        SerialService.getInstance().addHandler(tagId -> {
+            System.out.println("Global Log: Kartu " + tagId + " terdeteksi.");
+            // Jalankan fungsi database di sini
+        });
+        
+        // 3. Contoh update UI di MainFrame
+        SerialService.getInstance().addHandler(tagId -> {
+            javax.swing.SwingUtilities.invokeLater(() -> {
+                //lblStatus.setText("User Terakhir: " + tagId);
+            });
+        });
+        
+        initComponents();        
     }
 
     /**

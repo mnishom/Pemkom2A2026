@@ -5,7 +5,7 @@
 package com.ituhn.pemkom2.gui;
 
 import com.ituhn.pemkom2.objects.Karyawan;
-import com.ituhn.pemkom2.objects.KaryawanService;
+import com.ituhn.pemkom2.services.KaryawanService;
 
 
 
@@ -21,7 +21,8 @@ public class AdminPage extends javax.swing.JFrame {
     public AdminPage() {
         initComponents();
         
-        showData("");
+        showData(""); //tampilkan seluruh data karyawan    
+        
     }
 
     /**

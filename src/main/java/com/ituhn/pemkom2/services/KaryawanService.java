@@ -2,9 +2,11 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package com.ituhn.pemkom2.objects;
+package com.ituhn.pemkom2.services;
 
 import com.ituhn.pemkom2.gui.AdminPage;
+import com.ituhn.pemkom2.objects.GenericDAO;
+import com.ituhn.pemkom2.objects.Karyawan;
 import com.mongodb.client.model.Filters;
 import java.awt.BorderLayout;
 import java.awt.Color;
