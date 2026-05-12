@@ -1,5 +1,6 @@
-package com.ituhn.pemkom2.objects;
+package com.ituhn.pemkom2.dao;
 
+import com.ituhn.pemkom2.util.MongoManager;
 import com.mongodb.client.MongoCollection;
 import org.bson.conversions.Bson;
 import java.util.ArrayList;

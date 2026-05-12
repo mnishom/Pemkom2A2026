@@ -5,7 +5,7 @@
 package com.ituhn.pemkom2.services;
 
 import com.ituhn.pemkom2.gui.AdminPage;
-import com.ituhn.pemkom2.objects.GenericDAO;
+import com.ituhn.pemkom2.dao.GenericDAO;
 import com.ituhn.pemkom2.objects.Karyawan;
 import com.mongodb.client.model.Filters;
 import java.awt.BorderLayout;

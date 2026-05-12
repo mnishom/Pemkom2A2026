@@ -1,4 +1,4 @@
-package com.ituhn.pemkom2.objects;
+package com.ituhn.pemkom2.util;
 
 import com.mongodb.MongoClientSettings;
 import com.mongodb.client.MongoClient;

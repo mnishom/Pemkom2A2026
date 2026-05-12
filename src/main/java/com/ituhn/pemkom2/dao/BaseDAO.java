@@ -1,4 +1,4 @@
-package com.ituhn.pemkom2.objects;
+package com.ituhn.pemkom2.dao;
 
 import java.util.List;
 import org.bson.conversions.Bson;
