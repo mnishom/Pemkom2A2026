@@ -4,8 +4,8 @@
  */
 package com.ituhn.pemkom2.services;
 
-import com.ituhn.pemkom2.gui.AdminPage;
 import com.ituhn.pemkom2.dao.GenericDAO;
+import com.ituhn.pemkom2.gui.panel.KaryawanPanel;
 import com.ituhn.pemkom2.objects.Karyawan;
 import com.mongodb.client.model.Filters;
 import java.awt.BorderLayout;
@@ -130,13 +130,13 @@ public class KaryawanService {
                 tombolEdit.setBackground(Color.ORANGE);
                 tombolEdit.setCursor(new Cursor(Cursor.HAND_CURSOR));
                 tombolEdit.addActionListener((ActionEvent e) -> {
-                    AdminPage.txtUID.setText(k.getUidRfid());
-                    AdminPage.txtKRID.setText(k.getIdKaryawan());
-                    AdminPage.txtKRID.setEnabled(false); 
-                    AdminPage.txtKRName.setText(k.getNamaLengkap());
-                    AdminPage.txtKRDept.setSelectedItem(k.getDepartemen());
-                    AdminPage.btnUpdate.setEnabled(true);
-                    AdminPage.btnSave.setEnabled(false); 
+                    KaryawanPanel.txtUID.setText(k.getUidRfid());
+                    KaryawanPanel.txtKRID.setText(k.getIdKaryawan());
+                    KaryawanPanel.txtKRID.setEnabled(false); 
+                    KaryawanPanel.txtKRName.setText(k.getNamaLengkap());
+                    KaryawanPanel.txtKRDept.setSelectedItem(k.getDepartemen());
+                    KaryawanPanel.btnUpdate.setEnabled(true);
+                    KaryawanPanel.btnSave.setEnabled(false); 
                 });
                 JButton tombolDelete = new JButton("Delete");
                 tombolDelete.setBackground(Color.RED);
@@ -218,7 +218,7 @@ public class KaryawanService {
         Karyawan k = DAO.findOne(filter);
         if (k != null) {
             DAO.update(filter, newK);
-            AdminPage.showData("");
+            KaryawanPanel.showData("");
             JOptionPane.showMessageDialog(null, "Data berhasil diperbarui!");
         }
     }
@@ -231,7 +231,7 @@ public class KaryawanService {
     public void hapusKaryawan(String idK) {
         Bson filter = Filters.eq("idKaryawan", idK);
         DAO.delete(filter); // Menggunakan deleteOne [6]
-        AdminPage.showData("");
+        KaryawanPanel.showData("");
         JOptionPane.showMessageDialog(null, "Data karyawan berhasil dihapus.");
     }
 }

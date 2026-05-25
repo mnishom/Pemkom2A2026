@@ -7,6 +7,7 @@ package com.ituhn.pemkom2.services;
 import com.ituhn.pemkom2.objects.User;
 import com.ituhn.pemkom2.dao.GenericDAO;
 import com.ituhn.pemkom2.gui.AdminPage; // Halaman tujuan
+import com.ituhn.pemkom2.gui.LoginPage;
 import com.ituhn.pemkom2.util.SecurityUtils;
 import com.mongodb.client.model.Filters;
 import java.awt.Frame;
@@ -27,8 +28,9 @@ public class AuthService {
      *
      * @param username
      * @param plainPassword
+     * @param loginPage
      */
-    public void login(String username, String plainPassword) {
+    public void login(String username, String plainPassword, LoginPage loginPage) {
         // 1. Mengubah password input menjadi hash SHA-256 untuk keamanan [2]
         String hashedInput = SecurityUtils.getHash(plainPassword, SecurityUtils.SHA_256);
 
@@ -50,6 +52,7 @@ public class AuthService {
             admPage.setLocationRelativeTo(null); 
             admPage.setVisible(true);
             admPage.setExtendedState(Frame.MAXIMIZED_BOTH); 
+            loginPage.setVisible(false); 
         } else {
             // Gagal: Notifikasi Error
             JOptionPane.showMessageDialog(null,

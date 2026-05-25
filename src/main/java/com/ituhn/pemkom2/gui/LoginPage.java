@@ -220,7 +220,7 @@ public class LoginPage extends javax.swing.JFrame {
             txtPassword.requestFocus();
         } else {
             AuthService userService = new AuthService();
-            userService.login(username, password);
+            userService.login(username, password, this);
         }
     }
 }
