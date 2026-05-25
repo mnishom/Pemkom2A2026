@@ -53,6 +53,12 @@ public class SidebarMainMenu extends JPanel {
                 "Settings",
                 new String[]{"General", "Security"}
         ));
+        
+        // REPORT SECTION
+        this.add(createAccordion(
+                "Report",
+                new String[]{"Log Absensi", "Performance"}
+        ));
 
         this.add(Box.createVerticalGlue());
     }
