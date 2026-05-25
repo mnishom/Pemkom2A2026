@@ -8,7 +8,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.release>21</maven.compiler.release>
-        <exec.mainClass>com.ituhn.pemkom2.MainApp</exec.mainClass>
+        <exec.mainClass>com.ituhn.pemkom2.gui.LoginPage</exec.mainClass>
     </properties>
     <dependencies>
         <!-- Driver NoSQL MongoDB (Pertemuan 5) -->

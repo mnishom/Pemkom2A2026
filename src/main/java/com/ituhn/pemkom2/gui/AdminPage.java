@@ -22,8 +22,7 @@ public class AdminPage extends javax.swing.JFrame {
         initComponents();
         
         showData(""); //tampilkan seluruh data karyawan    
-        
-    }
+     }
 
     /**
      * This method is called from within the constructor to initialize the form.
