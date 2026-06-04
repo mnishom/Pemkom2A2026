@@ -6,6 +6,8 @@ package com.ituhn.pemkom2.gui.panel;
 
 import com.ituhn.pemkom2.objects.Karyawan;
 import com.ituhn.pemkom2.services.KaryawanService;
+import com.ituhn.pemkom2.util.EncryptionUtils;
+import com.ituhn.pemkom2.util.SecurityUtils;
 
 /**
  *
@@ -219,8 +221,8 @@ public class KaryawanPanel extends javax.swing.JPanel {
 
     private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveActionPerformed
         Karyawan K = new Karyawan();
-        K.setUidRfid(txtUID.getText());
-        K.setIdKaryawan(txtKRID.getText());
+        K.setUidRfid(SecurityUtils.getHash(txtUID.getText(), SecurityUtils.SHA_256));
+        K.setIdKaryawan(EncryptionUtils.encrypt(txtKRID.getText())); 
         K.setNamaLengkap(txtKRName.getText());
         K.setDepartemen(txtKRDept.getSelectedItem().toString());
         KaryawanService service = new KaryawanService();

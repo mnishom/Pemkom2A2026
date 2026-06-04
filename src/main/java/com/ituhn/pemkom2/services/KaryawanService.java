@@ -7,6 +7,7 @@ package com.ituhn.pemkom2.services;
 import com.ituhn.pemkom2.dao.GenericDAO;
 import com.ituhn.pemkom2.gui.panel.KaryawanPanel;
 import com.ituhn.pemkom2.objects.Karyawan;
+import com.ituhn.pemkom2.util.EncryptionUtils;
 import com.mongodb.client.model.Filters;
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -115,7 +116,7 @@ public class KaryawanService {
                 lblNama.setForeground(Color.WHITE);
 
                 // Membuat Label ID Karyawan & Set warna teks jadi Putih
-                JLabel lblIDK = new JLabel("ID Karyawan: " + k.getIdKaryawan());
+                JLabel lblIDK = new JLabel("ID Karyawan: " + EncryptionUtils.decrypt(k.getIdKaryawan())); 
                 lblIDK.setForeground(Color.WHITE);
 
                 // Membuat Label Departemen & Set warna teks jadi Putih
