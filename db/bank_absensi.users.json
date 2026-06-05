@@ -1,0 +1,11 @@
+[{
+  "_id": {
+    "$oid": "6a13d74230f8393ce7d8163f"
+  },
+  "fullname": "M. Nishom",
+  "lastLogin": {
+    "$date": "2026-06-05T08:51:01.403Z"
+  },
+  "password": "a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3",
+  "username": "uhn"
+}]

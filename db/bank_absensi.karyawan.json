@@ -1,0 +1,27 @@
+[{
+  "_id": {
+    "$oid": "6a20e966657f946c05e37827"
+  },
+  "departemen": "Departemen Operasional (Front & Back Office)",
+  "idKaryawan": "EHPU5OERbS4/fFFqICVNpQ==",
+  "namaLengkap": "Sarah",
+  "uidRfid": "8bb0cf6eb9b17d0f7d22b456f121257dc1254e1f01665370476383ea776df414"
+},
+{
+  "_id": {
+    "$oid": "6a20f6d381f6406c22b9e791"
+  },
+  "departemen": "Departemen Kredit (Pinjaman)",
+  "idKaryawan": "opOOGZ51F39OQWQGwdghgg==",
+  "namaLengkap": "Fitria R",
+  "uidRfid": "fe68a21fc76bba7b3a3d8e454eca8cd258de68fd08dddf035f23ddbdce6fc049"
+},
+{
+  "_id": {
+    "$oid": "6a222bcf4e5aa2748818499c"
+  },
+  "departemen": "Departemen Pemasaran dan Hubungan Nasabah",
+  "idKaryawan": "euGSrxr/iHSY0r3gAmdePw==",
+  "namaLengkap": "Nayla Z",
+  "uidRfid": "8a9bcf1e51e812d0af8465a8dbcc9f741064bf0af3b3d08e6b0246437c19f7fb"
+}]
