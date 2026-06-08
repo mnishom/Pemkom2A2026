@@ -4,7 +4,6 @@
  */
 package com.ituhn.pemkom2.gui;
 
-import com.ituhn.pemkom2.gui.panel.KaryawanPanel;
 import java.awt.BorderLayout;
 import javax.swing.JPanel;
 
@@ -20,8 +19,7 @@ public class AdminPage extends javax.swing.JFrame {
      * Creates new form AdminPage
      */
     public AdminPage() {
-        initComponents();
-         
+        initComponents();         
      }
 
     /**
@@ -40,7 +38,7 @@ public class AdminPage extends javax.swing.JFrame {
         jPanel4 = new javax.swing.JPanel();
         appContentPane = new javax.swing.JPanel();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
         jPanel1.setBackground(new java.awt.Color(104, 23, 38));
 

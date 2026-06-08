@@ -5,15 +5,20 @@
 package com.ituhn.pemkom2.gui.panel;
 
 import com.ituhn.pemkom2.gui.AdminPage;
+import com.ituhn.pemkom2.gui.AttendancePage;
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Cursor;
 import java.awt.Dimension;
+import java.awt.Frame;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
+import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
+import javax.swing.SwingUtilities;
 import javax.swing.border.EmptyBorder;
 
 /**
@@ -28,7 +33,7 @@ public class SidebarMainMenu extends JPanel {
     private final Color HOVER_BG = new Color(37, 99, 235);
     private final Color ACTIVE_BG = new Color(59, 130, 246);
     private final Color TEXT_COLOR = Color.WHITE;
-    
+
     private JButton activeButton = null;
 
     public SidebarMainMenu() {
@@ -44,8 +49,8 @@ public class SidebarMainMenu extends JPanel {
 
         // MANAGEMENT SECTION
         this.add(createAccordion(
-                "Management",
-                new String[]{"Users", "Products", "Orders"}
+                "Attendance",
+                new String[]{"KiosK", "Riwayat", "Analisis"}
         ));
 
         // SETTINGS SECTION
@@ -53,7 +58,7 @@ public class SidebarMainMenu extends JPanel {
                 "Settings",
                 new String[]{"General", "Security"}
         ));
-        
+
         // REPORT SECTION
         this.add(createAccordion(
                 "Report",
@@ -127,8 +132,8 @@ public class SidebarMainMenu extends JPanel {
                         showPage(null);
                         break;
 
-                    case "Users":
-                        showPage(null);
+                    case "KiosK":
+                        showPage(new AttendancePage());
                         break;
 
                     case "Products":
@@ -147,15 +152,21 @@ public class SidebarMainMenu extends JPanel {
                         showPage(null);
                         break;
                 }
-                
+
                 // RESET OLD ACTIVE BUTTON
                 if (activeButton != null) {
                     activeButton.setBackground(SUBMENU_BG);
                 }
-                
+
                 // SET NEW ACTIVE BUTTON
                 activeButton = btn;
                 btn.setBackground(ACTIVE_BG);
+                
+                JFrame mainFrame = (JFrame) SwingUtilities.getWindowAncestor(SidebarMainMenu.this);
+                if (mainFrame != null) {
+                    mainFrame.dispose();
+                }
+                
             });
 
             body.add(btn);
@@ -178,13 +189,17 @@ public class SidebarMainMenu extends JPanel {
         return container;
     }
 
-    private void showPage(JPanel panel) {
+    private void showPage(Component comp) {
+        if (comp instanceof JPanel pnl) {
+            AdminPage.appContentPane.removeAll();
+            AdminPage.appContentPane.add(pnl, BorderLayout.CENTER);
 
-        AdminPage.appContentPane.removeAll();
-        AdminPage.appContentPane.add(panel, BorderLayout.CENTER);
-
-        AdminPage.appContentPane.revalidate();
-        AdminPage.appContentPane.repaint();
+            AdminPage.appContentPane.revalidate();
+            AdminPage.appContentPane.repaint();
+        }else if (comp instanceof JFrame frm) {
+            frm.setExtendedState(Frame.MAXIMIZED_BOTH); 
+            frm.setVisible(true); 
+        }
     }
 
 }
