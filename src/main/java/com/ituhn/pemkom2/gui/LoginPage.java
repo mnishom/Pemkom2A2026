@@ -5,8 +5,6 @@
 package com.ituhn.pemkom2.gui;
 
 import com.ituhn.pemkom2.services.AuthService;
-import com.ituhn.pemkom2.util.EncryptionUtils;
-import com.ituhn.pemkom2.util.SecurityUtils;
 import java.awt.Frame;
 import javax.swing.JOptionPane;
 
@@ -15,6 +13,7 @@ import javax.swing.JOptionPane;
  * @author mnish
  */
 public class LoginPage extends javax.swing.JFrame {
+    
 
     /**
      * Creates new form LoginPage

@@ -4,24 +4,40 @@
  */
 package com.ituhn.pemkom2.gui;
 
+import com.ituhn.pemkom2.gui.panel.Settings;
+import com.ituhn.pemkom2.objects.Karyawan;
 import com.ituhn.pemkom2.services.DigitalClockService;
+import com.ituhn.pemkom2.services.KaryawanService;
+import com.ituhn.pemkom2.services.LogAbsensiService;
+import com.ituhn.pemkom2.services.SerialService;
+import com.ituhn.pemkom2.util.EncryptionUtils;
+import com.ituhn.pemkom2.util.SecurityUtils;
 import javax.swing.JLabel;
+import javax.swing.SwingUtilities;
 
 /**
  *
  * @author mnish
  */
 public class AttendancePage extends javax.swing.JFrame {
+
     // Referensi thread disimpan untuk ditrack jika dibutuhkan (misal: untuk stop/cek status)
     private Thread clockThread;
+
+    Thread delayThread;
 
     /**
      * Creates new form AttendancePage
      */
     public AttendancePage() {
         initComponents();
-        
+
         initClock(jLabel1);
+        jLabel7.setText(Settings.prefs.get("LAST_STATUS", Settings.statusAbsen));
+
+        //inisialisasi thread delayThread
+        updateLabelWithDelay(jLabel7, "");
+        setupAttendanceWorkflow();
     }
 
     /**
@@ -47,6 +63,7 @@ public class AttendancePage extends javax.swing.JFrame {
         jLabel5 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
         jTextField1 = new javax.swing.JTextField();
+        jLabel7 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -163,6 +180,13 @@ public class AttendancePage extends javax.swing.JFrame {
                 .addContainerGap(16, Short.MAX_VALUE))
         );
 
+        jLabel7.setBackground(new java.awt.Color(104, 23, 39));
+        jLabel7.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jLabel7.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel7.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel7.setText("jLabel7");
+        jLabel7.setOpaque(true);
+
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
         jPanel4Layout.setHorizontalGroup(
@@ -180,7 +204,9 @@ public class AttendancePage extends javax.swing.JFrame {
                         .addComponent(jTextField1))
                     .addGroup(jPanel4Layout.createSequentialGroup()
                         .addContainerGap(37, Short.MAX_VALUE)
-                        .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jLabel7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
                 .addGap(33, 33, 33))
         );
         jPanel4Layout.setVerticalGroup(
@@ -194,7 +220,9 @@ public class AttendancePage extends javax.swing.JFrame {
                     .addComponent(jTextField1, javax.swing.GroupLayout.DEFAULT_SIZE, 40, Short.MAX_VALUE))
                 .addGap(27, 27, 27)
                 .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(44, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel7, javax.swing.GroupLayout.DEFAULT_SIZE, 32, Short.MAX_VALUE)
+                .addContainerGap())
         );
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
@@ -235,6 +263,7 @@ public class AttendancePage extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
@@ -246,19 +275,77 @@ public class AttendancePage extends javax.swing.JFrame {
 
     private void initClock(JLabel lblJam) {
         DigitalClockService service = new DigitalClockService(lblJam, "EEEE, d MMMM yyyy, HH:mm:ss");
-        
+
         // 1. Ambil objek thread dari service
         clockThread = service.getThread();
-        
+
         // 2. Beri nama secara mandiri untuk debugging/tracking
         clockThread.setName("Thread-Jam-Kiosk");
-        
+
         // 3. Atur daemon secara mandiri sebelum start [Conversation History]
         clockThread.setDaemon(true);
-        
+
         // 4. Jalankan thread (Fase New -> Runnable) [3]
         clockThread.start();
-        
+
         System.out.println("Memulai: " + clockThread.getName() + " (Daemon: " + clockThread.isDaemon() + ")");
     }
+
+    private void setupAttendanceWorkflow() {
+        KaryawanService krService = new KaryawanService();
+        LogAbsensiService logService = new LogAbsensiService();
+
+        // Mendaftarkan handler asinkron ke SerialService [11]
+        SerialService.getInstance().addHandler(dataRfid -> {
+            // 1. HASH: Mengamankan UID menggunakan SHA-256 [12, 13]
+            String hashedUid = SecurityUtils.getHash(dataRfid, SecurityUtils.SHA_256);
+
+            // 2. MATCH: Mencari data karyawan di database
+            Karyawan k = krService.findByUid(hashedUid);
+            boolean isSuccess = (k != null);
+
+            // 3. SAVE: Mencatat log absensi [6]
+            logService.simpanLog(hashedUid, Settings.prefs.get("LAST_STATUS", Settings.statusAbsen));
+
+            // 4. NOTIFY: Update GUI secara aman (mencegah UI Freezing) [10]
+            SwingUtilities.invokeLater(() -> {
+                if (isSuccess) {
+                    // Update Card UI dengan data dari objek Karyawan [14, 15]
+                    if (k != null) {
+                        jLabel3.setText("Nama Lengkap: " + k.getNamaLengkap() + "");
+                        jLabel4.setText("ID Karyawan: " + EncryptionUtils.decrypt(k.getIdKaryawan()));
+                        jLabel5.setText("Departemen: " + k.getDepartemen());
+                        updateLabelWithDelay(jLabel7, "Absensi diterima. Terimakasih");
+                    }
+                } else {
+                    updateLabelWithDelay(jLabel7, "Kartu Tidak Terdaftar!");
+                }
+            });
+        });
+    }
+
+    private void updateLabelWithDelay(JLabel comp, String info) {
+        if (delayThread != null && delayThread.isAlive()) {
+            delayThread.interrupt();
+        }
+
+        delayThread = new Thread(() -> {
+            comp.setText(info); 
+            try {
+                for (int i = 3; i >= 1; i--) {
+                    Thread.sleep(1000);
+                }
+                
+                SwingUtilities.invokeLater(() -> comp.setText(Settings.prefs.get("LAST_STATUS", Settings.statusAbsen)));
+
+            } catch (InterruptedException e) {
+                // Penanganan jika thread dihentikan paksa (Interrupted)
+            }
+        });
+
+        delayThread.setName("delayThread"); 
+        delayThread.setDaemon(true);         
+        delayThread.start();
+    }
+
 }

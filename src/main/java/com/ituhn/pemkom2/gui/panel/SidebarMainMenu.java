@@ -56,7 +56,7 @@ public class SidebarMainMenu extends JPanel {
         // SETTINGS SECTION
         this.add(createAccordion(
                 "Settings",
-                new String[]{"General", "Security"}
+                new String[]{"General"}
         ));
 
         // REPORT SECTION
@@ -145,7 +145,7 @@ public class SidebarMainMenu extends JPanel {
                         break;
 
                     case "General":
-                        showPage(null);
+                        showPage(new Settings());
                         break;
 
                     case "Security":
@@ -161,12 +161,6 @@ public class SidebarMainMenu extends JPanel {
                 // SET NEW ACTIVE BUTTON
                 activeButton = btn;
                 btn.setBackground(ACTIVE_BG);
-                
-                JFrame mainFrame = (JFrame) SwingUtilities.getWindowAncestor(SidebarMainMenu.this);
-                if (mainFrame != null) {
-                    mainFrame.dispose();
-                }
-                
             });
 
             body.add(btn);
@@ -190,15 +184,25 @@ public class SidebarMainMenu extends JPanel {
     }
 
     private void showPage(Component comp) {
-        if (comp instanceof JPanel pnl) {
-            AdminPage.appContentPane.removeAll();
-            AdminPage.appContentPane.add(pnl, BorderLayout.CENTER);
-
-            AdminPage.appContentPane.revalidate();
-            AdminPage.appContentPane.repaint();
-        }else if (comp instanceof JFrame frm) {
-            frm.setExtendedState(Frame.MAXIMIZED_BOTH); 
-            frm.setVisible(true); 
+        switch (comp) {
+            case JPanel pnl -> {
+                AdminPage.appContentPane.removeAll();
+                AdminPage.appContentPane.add(pnl, BorderLayout.CENTER);
+                
+                AdminPage.appContentPane.revalidate();
+                AdminPage.appContentPane.repaint();
+            }
+            case JFrame frm -> { 
+                JFrame mainFrame = (JFrame) SwingUtilities.getWindowAncestor(SidebarMainMenu.this);
+                if (mainFrame != null) {
+                    mainFrame.dispose();
+                }                
+                
+                frm.setExtendedState(Frame.MAXIMIZED_BOTH);
+                frm.setVisible(true);
+            }
+            default -> {
+            }
         }
     }
 

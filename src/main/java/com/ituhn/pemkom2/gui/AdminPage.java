@@ -15,6 +15,7 @@ import javax.swing.JPanel;
  */
 public class AdminPage extends javax.swing.JFrame {
 
+
     /**
      * Creates new form AdminPage
      */
