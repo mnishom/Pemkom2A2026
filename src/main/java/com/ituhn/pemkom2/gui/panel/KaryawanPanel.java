@@ -5,9 +5,15 @@
 package com.ituhn.pemkom2.gui.panel;
 
 import com.ituhn.pemkom2.objects.Karyawan;
+import com.ituhn.pemkom2.services.I18nService;
 import com.ituhn.pemkom2.services.KaryawanService;
 import com.ituhn.pemkom2.util.EncryptionUtils;
 import com.ituhn.pemkom2.util.SecurityUtils;
+import java.awt.Component;
+import java.util.Locale;
+import javax.swing.DefaultListCellRenderer;
+import javax.swing.JList;
+import javax.swing.SwingUtilities;
 
 /**
  *
@@ -19,10 +25,14 @@ public class KaryawanPanel extends javax.swing.JPanel {
      * Creates new form KaryawanPanel
      */
     public KaryawanPanel() {
+        I18nService.setLocale(Locale.of(Settings.prefs.get("LANGUAGE", Settings.statusLang))); 
+        
         initComponents();
-        
-        showData(""); 
-        
+
+        showData("");
+
+        renderLang();
+
     }
 
     /**
@@ -58,20 +68,20 @@ public class KaryawanPanel extends javax.swing.JPanel {
 
         setLayout(new java.awt.BorderLayout());
 
-        jLabel5.setText("UID");
+        jLabel5.setText(I18nService.get("ui.emp.uid"));
 
-        jLabel7.setText("ID Karyawan");
+        jLabel7.setText(I18nService.get("ui.emp.id"));
 
-        jLabel8.setText("Nama Karyawan");
+        jLabel8.setText(I18nService.get("ui.emp.name"));
 
-        jLabel9.setText("Departemen");
+        jLabel9.setText(I18nService.get("ui.emp.dept"));
 
-        txtKRDept.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Departemen Operasional (Front & Back Office)", "Departemen Pemasaran dan Hubungan Nasabah", "Departemen Kredit (Pinjaman)", "Departemen Manajemen Risiko dan Kepatuhan", "Departemen Teknologi dan Informasi (TI)", "Departemen Pendukung (Support)", "Manajemen Tingkat Atas" }));
+        txtKRDept.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "ui.dept.fbo", "ui.dept.marketing", "ui.dept.loan", "ui.dept.risk", "ui.dept.it", "ui.dept.support", "ui.dept.topman" }));
 
         btnSave.setBackground(new java.awt.Color(0, 0, 255));
         btnSave.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         btnSave.setForeground(new java.awt.Color(255, 255, 255));
-        btnSave.setText("Save");
+        btnSave.setText(I18nService.get("ui.btn.save"));
         btnSave.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         btnSave.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -82,7 +92,7 @@ public class KaryawanPanel extends javax.swing.JPanel {
         btnUpdate.setBackground(new java.awt.Color(255, 153, 0));
         btnUpdate.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         btnUpdate.setForeground(new java.awt.Color(255, 255, 255));
-        btnUpdate.setText("Update");
+        btnUpdate.setText(I18nService.get("ui.btn.update"));
         btnUpdate.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         btnUpdate.setEnabled(false);
         btnUpdate.addActionListener(new java.awt.event.ActionListener() {
@@ -94,7 +104,7 @@ public class KaryawanPanel extends javax.swing.JPanel {
         btnRefresh.setBackground(new java.awt.Color(0, 153, 0));
         btnRefresh.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         btnRefresh.setForeground(new java.awt.Color(255, 255, 255));
-        btnRefresh.setText("Refresh");
+        btnRefresh.setText(I18nService.get("ui.btn.refresh"));
         btnRefresh.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         btnRefresh.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -112,7 +122,7 @@ public class KaryawanPanel extends javax.swing.JPanel {
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addComponent(btnSave, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btnUpdate, javax.swing.GroupLayout.DEFAULT_SIZE, 80, Short.MAX_VALUE))
+                        .addComponent(btnUpdate, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addComponent(btnRefresh, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap(17, Short.MAX_VALUE))
         );
@@ -222,7 +232,7 @@ public class KaryawanPanel extends javax.swing.JPanel {
     private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveActionPerformed
         Karyawan K = new Karyawan();
         K.setUidRfid(SecurityUtils.getHash(txtUID.getText(), SecurityUtils.SHA_256));
-        K.setIdKaryawan(EncryptionUtils.encrypt(txtKRID.getText())); 
+        K.setIdKaryawan(EncryptionUtils.encrypt(txtKRID.getText()));
         K.setNamaLengkap(txtKRName.getText());
         K.setDepartemen(txtKRDept.getSelectedItem().toString());
         KaryawanService service = new KaryawanService();
@@ -272,7 +282,6 @@ public class KaryawanPanel extends javax.swing.JPanel {
     public static javax.swing.JTextField txtUID;
     // End of variables declaration//GEN-END:variables
 
-
     public static void showData(String key) {
         KaryawanService K = new KaryawanService();
         K.tampilKaryawan(jPanel4, key);
@@ -283,10 +292,26 @@ public class KaryawanPanel extends javax.swing.JPanel {
         txtUID.setText("");
         txtKRID.setText("");
         txtKRName.setText("");
-        txtKRDept.setSelectedIndex(0); 
-        btnUpdate.setEnabled(false); 
+        txtKRDept.setSelectedIndex(0);
+        btnUpdate.setEnabled(false);
         txtUID.requestFocus();
     }
-    
-    
+
+    private void renderLang() {
+        SwingUtilities.invokeLater(() -> {
+            txtKRDept.setRenderer(new DefaultListCellRenderer() {
+                @Override
+                public Component getListCellRendererComponent(JList<?> list, Object value,
+                        int index, boolean isSelected, boolean cellHasFocus) {
+
+                    super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+
+                    if (value instanceof String key) {
+                        setText(I18nService.get(key));
+                    }
+                    return this;
+                }
+            });
+        });
+    }
 }

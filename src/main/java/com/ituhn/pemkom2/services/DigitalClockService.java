@@ -4,6 +4,7 @@
  */
 package com.ituhn.pemkom2.services;
 
+import com.ituhn.pemkom2.gui.panel.Settings;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Locale;
@@ -34,7 +35,7 @@ public class DigitalClockService {
      */
     public Thread getThread() {
         Runnable clockTask = () -> {
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern(pattern, Locale.of("id", "ID"));
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern(pattern, Locale.of(Settings.prefs.get("LANGUAGE", Settings.statusLang)));
             try {
                 while (!Thread.currentThread().isInterrupted()) {
                     LocalDateTime now = LocalDateTime.now();

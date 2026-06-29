@@ -17,12 +17,14 @@ import java.util.Scanner;
  * @author mnish
  */
 public class SerialService {
+
     private static SerialService instance;
     private SerialPort activePort;
     private final List<SerialDataHandler<String>> handlers = new ArrayList<>();
 
     // Private constructor untuk Singleton
-    private SerialService() {}
+    private SerialService() {
+    }
 
     public static synchronized SerialService getInstance() {
         if (instance == null) {
@@ -33,6 +35,7 @@ public class SerialService {
 
     /**
      * Menambahkan handler baru ke dalam daftar observer.
+     *
      * @param handler
      */
     public void addHandler(SerialDataHandler<String> handler) {
@@ -42,7 +45,9 @@ public class SerialService {
     }
 
     /**
-     * Menghapus handler (penting untuk mencegah memory leak saat frame ditutup).
+     * Menghapus handler (penting untuk mencegah memory leak saat frame
+     * ditutup).
+     *
      * @param handler
      */
     public void removeHandler(SerialDataHandler<String> handler) {
@@ -51,9 +56,10 @@ public class SerialService {
 
     /**
      * Membuka koneksi ke port serial.
+     *
      * @param portName
      * @param baudRate
-     * @return 
+     * @return
      */
     public boolean connect(String portName, int baudRate) {
         // Jika port sudah terbuka, tidak perlu buka lagi
@@ -63,7 +69,7 @@ public class SerialService {
 
         activePort = SerialPort.getCommPort(portName);
         activePort.setBaudRate(baudRate);
-        
+
         // Setting Timeout agar pembacaan tidak memblokir thread utama
         // TIMEOUT_READ_SEMI_BLOCKING cocok untuk scanner.nextLine()
         activePort.setComPortTimeouts(SerialPort.TIMEOUT_READ_SEMI_BLOCKING, 1000, 0);
@@ -90,7 +96,9 @@ public class SerialService {
 
             @Override
             public void serialEvent(SerialPortEvent event) {
-                if (event.getEventType() != SerialPort.LISTENING_EVENT_DATA_AVAILABLE) return;
+                if (event.getEventType() != SerialPort.LISTENING_EVENT_DATA_AVAILABLE) {
+                    return;
+                }
 
                 // Menggunakan Scanner untuk menangkap satu baris utuh (ID RFID)
                 try (Scanner scanner = new Scanner(activePort.getInputStream())) {
@@ -110,7 +118,7 @@ public class SerialService {
     /**
      * Mengirimkan data ke semua handler yang terdaftar.
      */
-    private void broadcast(String data) {
+    public void broadcast(String data) {
         for (SerialDataHandler<String> handler : handlers) {
             handler.onDataReceived(data);
         }
@@ -127,5 +135,9 @@ public class SerialService {
     public boolean isConnected() {
         return activePort != null && activePort.isOpen();
     }
-    
+
+    public void simulateBroadcast(String dummyData) {
+        broadcast(dummyData);
+    }
+
 }

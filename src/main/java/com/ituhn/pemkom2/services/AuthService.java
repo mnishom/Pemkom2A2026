@@ -47,7 +47,7 @@ public class AuthService {
             userDAO.update(Filters.eq("username", username), user);
 
             // Berhasil: Masuk ke Halaman Admin
-            JOptionPane.showMessageDialog(null, "Selamat Datang, " + user.getFullname());
+            //JOptionPane.showMessageDialog(null, "Selamat Datang, " + user.getFullname());
             AdminPage admPage = new AdminPage();
             admPage.setLocationRelativeTo(null); 
             admPage.setVisible(true);
@@ -56,8 +56,8 @@ public class AuthService {
         } else {
             // Gagal: Notifikasi Error
             JOptionPane.showMessageDialog(null,
-                    "Username atau Password Salah!",
-                    "Login Gagal",
+                    I18nService.get("ui.login.wrongpwd"), 
+                    I18nService.get("ui.login.faillogin"),
                     JOptionPane.ERROR_MESSAGE);
         }
     }
@@ -83,7 +83,7 @@ public class AuthService {
             userDAO.save(newUser); // Memanggil insertOne melalui GenericDAO [5]
         } catch (Exception e) {
             // Standar Debugging: Mengidentifikasi error log secara mandiri [6]
-            JOptionPane.showMessageDialog(null, "Gagal mendaftarkan user: " + e.getMessage());
+            //JOptionPane.showMessageDialog(null, "Gagal mendaftarkan user: " + e.getMessage());
         }
     }
 }

@@ -4,8 +4,11 @@
  */
 package com.ituhn.pemkom2.gui;
 
+import com.ituhn.pemkom2.gui.panel.Settings;
 import com.ituhn.pemkom2.services.AuthService;
+import com.ituhn.pemkom2.services.I18nService;
 import java.awt.Frame;
+import java.util.Locale;
 import javax.swing.JOptionPane;
 
 /**
@@ -20,6 +23,7 @@ public class LoginPage extends javax.swing.JFrame {
      */
     public LoginPage() {
         this.setExtendedState(Frame.MAXIMIZED_BOTH); 
+        I18nService.setLocale(Locale.of(Settings.prefs.get("LANGUAGE", Settings.statusLang))); 
         initComponents();       
 
         loginornament.setBackground("/images/bg2.png");
@@ -57,7 +61,8 @@ public class LoginPage extends javax.swing.JFrame {
 
         jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(104, 23, 39));
-        jLabel1.setText("Username");
+        jLabel1.setText(I18nService.get("ui.login.username")
+        );
         jLabel1.setVerticalAlignment(javax.swing.SwingConstants.BOTTOM);
 
         txtUsername.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
@@ -77,7 +82,8 @@ public class LoginPage extends javax.swing.JFrame {
 
         jLabel2.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel2.setForeground(new java.awt.Color(104, 23, 39));
-        jLabel2.setText("Password");
+        jLabel2.setText(I18nService.get("ui.login.password")
+        );
         jLabel2.setVerticalAlignment(javax.swing.SwingConstants.BOTTOM);
 
         jLabel3.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -85,7 +91,8 @@ public class LoginPage extends javax.swing.JFrame {
 
         btnGo.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         btnGo.setForeground(new java.awt.Color(104, 23, 39));
-        btnGo.setText("Go");
+        btnGo.setText(I18nService.get("ui.login.go")
+        );
         btnGo.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         btnGo.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -110,7 +117,7 @@ public class LoginPage extends javax.swing.JFrame {
                             .addComponent(txtUsername)
                             .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 262, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(txtPassword, javax.swing.GroupLayout.DEFAULT_SIZE, 360, Short.MAX_VALUE)
-                            .addComponent(btnGo, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 97, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(btnGo, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 148, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(44, 44, 44))))
         );
         jPanel3Layout.setVerticalGroup(
@@ -215,10 +222,10 @@ public class LoginPage extends javax.swing.JFrame {
         String username = txtUsername.getText();
         String password = new String(txtPassword.getPassword());
         if (username.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Mohon isi Username Anda");
+            JOptionPane.showMessageDialog(this, I18nService.get("ui.login.fillusername")); 
             txtUsername.requestFocus();
         } else if (password.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Mohon isi Password Anda");
+            JOptionPane.showMessageDialog(this, I18nService.get("ui.login.fillpwd")); 
             txtPassword.requestFocus();
         } else {
             AuthService userService = new AuthService();

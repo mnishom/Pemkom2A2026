@@ -4,24 +4,34 @@
  */
 package com.ituhn.pemkom2.gui;
 
+import com.ituhn.pemkom2.services.I18nService;
 import java.awt.BorderLayout;
 import javax.swing.JPanel;
-
-
+import javax.swing.SwingUtilities;
 
 /**
  *
  * @author mnish
  */
-public class AdminPage extends javax.swing.JFrame {
-
-
+public class AdminPage extends javax.swing.JFrame implements I18nService.I18nChangeListener {
+    private static AdminPage instance;
+    
     /**
      * Creates new form AdminPage
      */
     public AdminPage() {
-        initComponents();         
-     }
+        initComponents();
+
+        I18nService.registerListener(AdminPage.this);
+    }
+    
+    
+    public static synchronized AdminPage getInstance() {
+        if (instance == null) {
+            instance = new AdminPage();
+        }
+        return instance;
+    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -33,6 +43,7 @@ public class AdminPage extends javax.swing.JFrame {
     private void initComponents() {
 
         jPanel1 = new javax.swing.JPanel();
+        jLabel1 = new javax.swing.JLabel();
         jPanel2 = new javax.swing.JPanel();
         sidebarMainMenu1 = new com.ituhn.pemkom2.gui.panel.SidebarMainMenu();
         jPanel3 = new javax.swing.JPanel();
@@ -43,15 +54,26 @@ public class AdminPage extends javax.swing.JFrame {
 
         jPanel1.setBackground(new java.awt.Color(104, 23, 38));
 
+        jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 48)); // NOI18N
+        jLabel1.setForeground(new java.awt.Color(226, 211, 188));
+        jLabel1.setText(I18nService.get("ui.admin.appname")
+        );
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 893, Short.MAX_VALUE)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(18, 18, 18)
+                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 854, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(21, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 100, Short.MAX_VALUE)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(30, 30, 30)
+                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(22, Short.MAX_VALUE))
         );
 
         getContentPane().add(jPanel1, java.awt.BorderLayout.PAGE_START);
@@ -133,6 +155,7 @@ public class AdminPage extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     public static javax.swing.JPanel appContentPane;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
@@ -140,14 +163,22 @@ public class AdminPage extends javax.swing.JFrame {
     private com.ituhn.pemkom2.gui.panel.SidebarMainMenu sidebarMainMenu1;
     // End of variables declaration//GEN-END:variables
 
-    public void addContent(JPanel panel){
-        if(appContentPane.getComponentCount() > 0){
+    public void addContent(JPanel panel) {
+        if (appContentPane.getComponentCount() > 0) {
             appContentPane.removeAll();
         }
-        
+
         appContentPane.add(panel, BorderLayout.CENTER);
         appContentPane.revalidate();
-        appContentPane.repaint();       
+        appContentPane.repaint();
     }
-    
+
+    @Override
+    public void onLanguageChanged() {
+        SwingUtilities.invokeLater(() -> {
+            jLabel1.setText(I18nService.get("ui.admin.appname")); 
+            
+        });
+    }
+
 }

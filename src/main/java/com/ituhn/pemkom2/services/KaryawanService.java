@@ -112,22 +112,22 @@ public class KaryawanService {
                 ));
 
                 // Membuat Label Nama & Set warna teks jadi Putih
-                JLabel lblNama = new JLabel("Nama: " + k.getNamaLengkap());
+                JLabel lblNama = new JLabel(I18nService.get("ui.emp.name")+": " + k.getNamaLengkap());
                 lblNama.setForeground(Color.WHITE);
 
                 // Membuat Label ID Karyawan & Set warna teks jadi Putih
-                JLabel lblIDK = new JLabel("ID Karyawan: " + EncryptionUtils.decrypt(k.getIdKaryawan())); 
+                JLabel lblIDK = new JLabel(I18nService.get("ui.emp.id")+": " + EncryptionUtils.decrypt(k.getIdKaryawan())); 
                 lblIDK.setForeground(Color.WHITE);
 
                 // Membuat Label Departemen & Set warna teks jadi Putih
-                JLabel lblDept = new JLabel("Departmen: " + k.getDepartemen());
+                JLabel lblDept = new JLabel(I18nService.get("ui.emp.dept")+": " + k.getDepartemen());
                 lblDept.setForeground(Color.WHITE);
 
                 // Membuat panel kontrol 1 baris 2 kolom, berisi tombol edit dan hapus
                 JPanel controlPanel = new JPanel(new GridLayout(1, 2, 20, 15));
                 controlPanel.setBackground(new Color(237, 125, 49));
 
-                JButton tombolEdit = new JButton("Edit");
+                JButton tombolEdit = new JButton(I18nService.get("ui.btn.update"));
                 tombolEdit.setBackground(Color.ORANGE);
                 tombolEdit.setCursor(new Cursor(Cursor.HAND_CURSOR));
                 tombolEdit.addActionListener((ActionEvent e) -> {
@@ -139,7 +139,7 @@ public class KaryawanService {
                     KaryawanPanel.btnUpdate.setEnabled(true);
                     KaryawanPanel.btnSave.setEnabled(false); 
                 });
-                JButton tombolDelete = new JButton("Delete");
+                JButton tombolDelete = new JButton(I18nService.get("ui.btn.delete"));
                 tombolDelete.setBackground(Color.RED);
                 tombolDelete.setForeground(Color.WHITE);
                 tombolDelete.setCursor(new Cursor(Cursor.HAND_CURSOR));
@@ -210,7 +210,7 @@ public class KaryawanService {
     }
     
     public Karyawan findByUid(String hashedUid) {
-        Bson filter = com.mongodb.client.model.Filters.eq("uidRfid", hashedUid);
+        Bson filter = Filters.eq("uidRfid", hashedUid);
         return DAO.findOne(filter);
     }
 

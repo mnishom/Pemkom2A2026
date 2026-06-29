@@ -12,11 +12,9 @@ import java.util.List;
  */
 public class GenericDAO<T> implements BaseDAO<T> {
     private final MongoCollection<T> collection;
-    private final Class<T> clazz;
 
     // Konstruktor menerima nama koleksi dan kelas entitas untuk mapping otomatis
     public GenericDAO(String collectionName, Class<T> clazz) {
-        this.clazz = clazz;
         this.collection = MongoManager.getDatabase().getCollection(collectionName, clazz);
     }
 

@@ -1,17 +1,15 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
- */
 package com.ituhn.pemkom2.gui;
 
 import com.ituhn.pemkom2.gui.panel.Settings;
 import com.ituhn.pemkom2.objects.Karyawan;
 import com.ituhn.pemkom2.services.DigitalClockService;
+import com.ituhn.pemkom2.services.I18nService;
 import com.ituhn.pemkom2.services.KaryawanService;
 import com.ituhn.pemkom2.services.LogAbsensiService;
 import com.ituhn.pemkom2.services.SerialService;
 import com.ituhn.pemkom2.util.EncryptionUtils;
 import com.ituhn.pemkom2.util.SecurityUtils;
+import java.util.Locale;
 import javax.swing.JLabel;
 import javax.swing.SwingUtilities;
 
@@ -30,6 +28,7 @@ public class AttendancePage extends javax.swing.JFrame {
      * Creates new form AttendancePage
      */
     public AttendancePage() {
+        I18nService.setLocale(Locale.of(Settings.prefs.get("LANGUAGE", Settings.statusLang))); 
         initComponents();
 
         initClock(jLabel1);
@@ -37,7 +36,10 @@ public class AttendancePage extends javax.swing.JFrame {
 
         //inisialisasi thread delayThread
         updateLabelWithDelay(jLabel7, "");
-        setupAttendanceWorkflow();
+        
+        
+        registerHandler();
+        
     }
 
     /**
@@ -48,6 +50,7 @@ public class AttendancePage extends javax.swing.JFrame {
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
+        java.awt.GridBagConstraints gridBagConstraints;
 
         jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
@@ -56,14 +59,14 @@ public class AttendancePage extends javax.swing.JFrame {
         jPanel3 = new javax.swing.JPanel();
         jPanel4 = new javax.swing.JPanel();
         rFIDIconPanel1 = new com.ituhn.pemkom2.palette.RFIDIconPanel();
-        jLabel2 = new javax.swing.JLabel();
+        labeltap = new javax.swing.JLabel();
         jPanel5 = new javax.swing.JPanel();
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
         jLabel7 = new javax.swing.JLabel();
+        jButton1 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -73,7 +76,8 @@ public class AttendancePage extends javax.swing.JFrame {
         jLabel1.setForeground(new java.awt.Color(104, 23, 39));
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/calendar-clock-icon.png"))); // NOI18N
-        jLabel1.setText("Jumat, 5 Juni 2026, 12:12:12");
+        jLabel1.setText(I18nService.get("ui.date.format")
+        );
 
         autoScaledLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/uhn_logo.png"))); // NOI18N
         autoScaledLabel1.setText(".");
@@ -85,7 +89,7 @@ public class AttendancePage extends javax.swing.JFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                 .addGap(21, 21, 21)
                 .addComponent(autoScaledLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 318, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 50, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 400, Short.MAX_VALUE)
                 .addComponent(jLabel1)
                 .addGap(31, 31, 31))
         );
@@ -117,6 +121,10 @@ public class AttendancePage extends javax.swing.JFrame {
 
         getContentPane().add(jPanel2, java.awt.BorderLayout.PAGE_END);
 
+        jPanel3.setLayout(new java.awt.GridBagLayout());
+
+        jPanel4.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
         javax.swing.GroupLayout rFIDIconPanel1Layout = new javax.swing.GroupLayout(rFIDIconPanel1);
         rFIDIconPanel1.setLayout(rFIDIconPanel1Layout);
         rFIDIconPanel1Layout.setHorizontalGroup(
@@ -125,26 +133,29 @@ public class AttendancePage extends javax.swing.JFrame {
         );
         rFIDIconPanel1Layout.setVerticalGroup(
             rFIDIconPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
+            .addGap(0, 40, Short.MAX_VALUE)
         );
 
-        jLabel2.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
-        jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel2.setText("Silahkan Tap Kartu Anda");
+        jPanel4.add(rFIDIconPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(216, 84, -1, -1));
+
+        labeltap.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        labeltap.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        labeltap.setText(I18nService.get("ui.welcome"));
+        jPanel4.add(labeltap, new org.netbeans.lib.awtextra.AbsoluteConstraints(194, 41, 246, -1));
 
         jPanel5.setBackground(new java.awt.Color(102, 102, 102));
 
         jLabel3.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         jLabel3.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel3.setText("Nama Lengkap:");
+        jLabel3.setText(I18nService.get("ui.label.name"));
 
         jLabel4.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         jLabel4.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel4.setText("ID Karyawan:");
+        jLabel4.setText(I18nService.get("ui.label.id"));
 
         jLabel5.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         jLabel5.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel5.setText("Departemen: ");
+        jLabel5.setText(I18nService.get("ui.label.dept"));
 
         jLabel6.setBackground(new java.awt.Color(0, 204, 204));
         jLabel6.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -160,10 +171,10 @@ public class AttendancePage extends javax.swing.JFrame {
                 .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 78, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(193, Short.MAX_VALUE))
+                    .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, 446, Short.MAX_VALUE)
+                    .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jLabel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
         );
         jPanel5Layout.setVerticalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -180,71 +191,40 @@ public class AttendancePage extends javax.swing.JFrame {
                 .addContainerGap(16, Short.MAX_VALUE))
         );
 
+        jPanel4.add(jPanel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(31, 151, -1, -1));
+
         jLabel7.setBackground(new java.awt.Color(104, 23, 39));
         jLabel7.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel7.setForeground(new java.awt.Color(255, 255, 255));
         jLabel7.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel7.setText("jLabel7");
         jLabel7.setOpaque(true);
+        jPanel4.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(31, 255, 570, 90));
 
-        javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
-        jPanel4.setLayout(jPanel4Layout);
-        jPanel4Layout.setHorizontalGroup(
-            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 246, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
-                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel4Layout.createSequentialGroup()
-                        .addGap(216, 216, 216)
-                        .addComponent(rFIDIconPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jTextField1))
-                    .addGroup(jPanel4Layout.createSequentialGroup()
-                        .addContainerGap(37, Short.MAX_VALUE)
-                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jLabel7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
-                .addGap(33, 33, 33))
-        );
-        jPanel4Layout.setVerticalGroup(
-            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel4Layout.createSequentialGroup()
-                .addGap(41, 41, 41)
-                .addComponent(jLabel2)
-                .addGap(18, 18, 18)
-                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(rFIDIconPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.DEFAULT_SIZE, 40, Short.MAX_VALUE))
-                .addGap(27, 27, 27)
-                .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel7, javax.swing.GroupLayout.DEFAULT_SIZE, 32, Short.MAX_VALUE)
-                .addContainerGap())
-        );
+        jButton1.setText(I18nService.get("ui.btn.simulation"));
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+        jPanel4.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(294, 93, -1, -1));
 
-        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
-        jPanel3.setLayout(jPanel3Layout);
-        jPanel3Layout.setHorizontalGroup(
-            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel3Layout.createSequentialGroup()
-                .addGap(318, 318, 318)
-                .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-        );
-        jPanel3Layout.setVerticalGroup(
-            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel3Layout.createSequentialGroup()
-                .addGap(97, 97, 97)
-                .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-        );
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.insets = new java.awt.Insets(61, 226, 71, 290);
+        jPanel3.add(jPanel4, gridBagConstraints);
 
         getContentPane().add(jPanel3, java.awt.BorderLayout.CENTER);
 
         setSize(new java.awt.Dimension(1131, 625));
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        SerialService.getInstance().broadcast("1555");
+    }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -257,8 +237,8 @@ public class AttendancePage extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private com.ituhn.pemkom2.palette.AutoScaledLabel autoScaledLabel1;
+    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
@@ -269,56 +249,35 @@ public class AttendancePage extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel5;
-    private javax.swing.JTextField jTextField1;
+    private javax.swing.JLabel labeltap;
     private com.ituhn.pemkom2.palette.RFIDIconPanel rFIDIconPanel1;
     // End of variables declaration//GEN-END:variables
 
     private void initClock(JLabel lblJam) {
-        DigitalClockService service = new DigitalClockService(lblJam, "EEEE, d MMMM yyyy, HH:mm:ss");
-
-        // 1. Ambil objek thread dari service
+        DigitalClockService service = new DigitalClockService(lblJam, I18nService.get("ui.date.format"));
         clockThread = service.getThread();
-
-        // 2. Beri nama secara mandiri untuk debugging/tracking
         clockThread.setName("Thread-Jam-Kiosk");
-
-        // 3. Atur daemon secara mandiri sebelum start [Conversation History]
         clockThread.setDaemon(true);
-
-        // 4. Jalankan thread (Fase New -> Runnable) [3]
         clockThread.start();
-
-        System.out.println("Memulai: " + clockThread.getName() + " (Daemon: " + clockThread.isDaemon() + ")");
     }
 
-    private void setupAttendanceWorkflow() {
+    private void registerHandler() {
         KaryawanService krService = new KaryawanService();
         LogAbsensiService logService = new LogAbsensiService();
 
-        // Mendaftarkan handler asinkron ke SerialService [11]
         SerialService.getInstance().addHandler(dataRfid -> {
-            // 1. HASH: Mengamankan UID menggunakan SHA-256 [12, 13]
             String hashedUid = SecurityUtils.getHash(dataRfid, SecurityUtils.SHA_256);
-
-            // 2. MATCH: Mencari data karyawan di database
             Karyawan k = krService.findByUid(hashedUid);
-            boolean isSuccess = (k != null);
-
-            // 3. SAVE: Mencatat log absensi [6]
-            logService.simpanLog(hashedUid, Settings.prefs.get("LAST_STATUS", Settings.statusAbsen));
-
-            // 4. NOTIFY: Update GUI secara aman (mencegah UI Freezing) [10]
+           
             SwingUtilities.invokeLater(() -> {
-                if (isSuccess) {
-                    // Update Card UI dengan data dari objek Karyawan [14, 15]
-                    if (k != null) {
-                        jLabel3.setText("Nama Lengkap: " + k.getNamaLengkap() + "");
-                        jLabel4.setText("ID Karyawan: " + EncryptionUtils.decrypt(k.getIdKaryawan()));
-                        jLabel5.setText("Departemen: " + k.getDepartemen());
-                        updateLabelWithDelay(jLabel7, "Absensi diterima. Terimakasih");
-                    }
+                if (k != null) {
+                    logService.simpanLog(hashedUid, Settings.prefs.get("LAST_STATUS", Settings.statusAbsen));
+                        jLabel3.setText(I18nService.get("ui.label.name")+": " + k.getNamaLengkap() + "");
+                        jLabel4.setText(I18nService.get("ui.label.id")+": " + EncryptionUtils.decrypt(k.getIdKaryawan()));
+                        jLabel5.setText(I18nService.get("ui.label.dept")+": " + k.getDepartemen());
+                        updateLabelWithDelay(jLabel7, I18nService.get("ui.status.success"));
                 } else {
-                    updateLabelWithDelay(jLabel7, "Kartu Tidak Terdaftar!");
+                    updateLabelWithDelay(jLabel7, I18nService.get("ui.status.failed"));
                 }
             });
         });
