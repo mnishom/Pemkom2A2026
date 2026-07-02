@@ -194,6 +194,8 @@ slidingLanguageToggle1.addActionListener(new java.awt.event.ActionListener() {
         statusLang = slidingLanguageToggle1.getSelectedLanguageString();
         prefs.put("LANGUAGE", statusLang);
         I18nService.setLocale(Locale.of(statusLang)); 
+        jTabbedPane1.setTitleAt(0, I18nService.get("ui.settings.tab0"));
+        jTabbedPane1.setTitleAt(1, I18nService.get("ui.settings.tab1"));
     }//GEN-LAST:event_slidingLanguageToggle1ActionPerformed
 
 
