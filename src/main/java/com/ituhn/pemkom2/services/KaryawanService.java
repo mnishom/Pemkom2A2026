@@ -120,7 +120,7 @@ public class KaryawanService {
                 lblIDK.setForeground(Color.WHITE);
 
                 // Membuat Label Departemen & Set warna teks jadi Putih
-                JLabel lblDept = new JLabel(I18nService.get("ui.emp.dept")+": " + k.getDepartemen());
+                JLabel lblDept = new JLabel(I18nService.get("ui.emp.dept")+": " + I18nService.get(k.getDepartemen())); 
                 lblDept.setForeground(Color.WHITE);
 
                 // Membuat panel kontrol 1 baris 2 kolom, berisi tombol edit dan hapus
@@ -131,9 +131,10 @@ public class KaryawanService {
                 tombolEdit.setBackground(Color.ORANGE);
                 tombolEdit.setCursor(new Cursor(Cursor.HAND_CURSOR));
                 tombolEdit.addActionListener((ActionEvent e) -> {
+                    KaryawanPanel.KR = k;
                     KaryawanPanel.txtUID.setText(k.getUidRfid());
-                    KaryawanPanel.txtKRID.setText(k.getIdKaryawan());
-                    KaryawanPanel.txtKRID.setEnabled(false); 
+                    KaryawanPanel.txtKRID.setText(EncryptionUtils.decrypt(k.getIdKaryawan()));
+//                    KaryawanPanel.txtUID.setEnabled(false); 
                     KaryawanPanel.txtKRName.setText(k.getNamaLengkap());
                     KaryawanPanel.txtKRDept.setSelectedItem(k.getDepartemen());
                     KaryawanPanel.btnUpdate.setEnabled(true);
@@ -157,7 +158,7 @@ public class KaryawanService {
                     );
 
                     switch (choice) {
-                        case JOptionPane.YES_OPTION -> hapusKaryawan(k.getIdKaryawan());
+                        case JOptionPane.YES_OPTION -> hapusKaryawan(k);
                         case JOptionPane.NO_OPTION -> System.out.println("User memilih: Batal");
                         default -> {
                         }
@@ -188,9 +189,6 @@ public class KaryawanService {
     }
 
     /**
-     * 3.READ (One): Mencari satu karyawan spesifik berdasarkan UID RFID [5],
-     * [6] Sangat krusial untuk alur Tap Kartu pada Pertemuan 14 [8].
-     *
      * @param key
      * @return
      */
@@ -215,27 +213,20 @@ public class KaryawanService {
     }
 
     /**
-     * 4.UPDATE: Memperbarui data karyawan menggunakan filter Bson [5], [6]
-     *
      * @param newK
      */
     public void updateKaryawan(Karyawan newK) {
-        Bson filter = Filters.eq("idKaryawan", newK.getIdKaryawan());
-        Karyawan k = DAO.findOne(filter);
-        if (k != null) {
-            DAO.update(filter, newK);
-            KaryawanPanel.showData("");
-            JOptionPane.showMessageDialog(null, "Data berhasil diperbarui!");
-        }
+        Bson filter = Filters.eq("_id", newK.getId());
+        DAO.update(filter, newK);
+        KaryawanPanel.showData("");
+        JOptionPane.showMessageDialog(null, "Data berhasil diperbarui!");
     }
 
     /**
-     * 5.DELETE: Menghapus data karyawan dari database [5], [6]
-     *
-     * @param idK
+     * @param newK
      */
-    public void hapusKaryawan(String idK) {
-        Bson filter = Filters.eq("idKaryawan", idK);
+    public void hapusKaryawan(Karyawan newK) {
+        Bson filter = Filters.eq("_id", newK);
         DAO.delete(filter); // Menggunakan deleteOne [6]
         KaryawanPanel.showData("");
         JOptionPane.showMessageDialog(null, "Data karyawan berhasil dihapus.");

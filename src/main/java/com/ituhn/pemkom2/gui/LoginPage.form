@@ -107,7 +107,7 @@
                   <Color blue="27" green="17" red="68" type="rgb"/>
                 </Property>
                 <Property name="text" type="java.lang.String" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
-                  <Connection code="I18nService.get(&quot;ui.login.username&quot;)&#xd;&#xa;" type="code"/>
+                  <Connection code="I18nService.get(&quot;ui.login.username&quot;)" type="code"/>
                 </Property>
                 <Property name="verticalAlignment" type="int" value="3"/>
               </Properties>

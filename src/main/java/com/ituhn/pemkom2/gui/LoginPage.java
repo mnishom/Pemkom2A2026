@@ -61,8 +61,7 @@ public class LoginPage extends javax.swing.JFrame {
 
         jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(104, 23, 39));
-        jLabel1.setText(I18nService.get("ui.login.username")
-        );
+        jLabel1.setText(I18nService.get("ui.login.username"));
         jLabel1.setVerticalAlignment(javax.swing.SwingConstants.BOTTOM);
 
         txtUsername.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N

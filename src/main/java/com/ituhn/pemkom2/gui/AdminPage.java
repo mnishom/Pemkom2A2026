@@ -176,9 +176,12 @@ public class AdminPage extends javax.swing.JFrame implements I18nService.I18nCha
     @Override
     public void onLanguageChanged() {
         SwingUtilities.invokeLater(() -> {
-            jLabel1.setText(I18nService.get("ui.admin.appname")); 
-            
+            jLabel1.setText(I18nService.get("ui.admin.appname"));
         });
     }
+
+
+
+
 
 }

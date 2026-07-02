@@ -21,18 +21,16 @@ import javax.swing.SwingUtilities;
  */
 public class KaryawanPanel extends javax.swing.JPanel {
 
+    public static Karyawan KR;
+
     /**
      * Creates new form KaryawanPanel
      */
     public KaryawanPanel() {
-        I18nService.setLocale(Locale.of(Settings.prefs.get("LANGUAGE", Settings.statusLang))); 
-        
+        I18nService.setLocale(Locale.of(Settings.prefs.get("LANGUAGE", Settings.statusLang)));
         initComponents();
-
         showData("");
-
         renderLang();
-
     }
 
     /**
@@ -230,25 +228,32 @@ public class KaryawanPanel extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveActionPerformed
-        Karyawan K = new Karyawan();
-        K.setUidRfid(SecurityUtils.getHash(txtUID.getText(), SecurityUtils.SHA_256));
-        K.setIdKaryawan(EncryptionUtils.encrypt(txtKRID.getText()));
-        K.setNamaLengkap(txtKRName.getText());
-        K.setDepartemen(txtKRDept.getSelectedItem().toString());
-        KaryawanService service = new KaryawanService();
-        service.tambahKaryawan(K);
-        showData("");
+        if (!txtUID.getText().isEmpty() && !txtKRID.getText().isEmpty() && !txtKRName.getText().isEmpty()) {
+            Karyawan K = new Karyawan();
+            K.setUidRfid(SecurityUtils.getHash(txtUID.getText(), SecurityUtils.SHA_256));
+            K.setIdKaryawan(EncryptionUtils.encrypt(txtKRID.getText()));
+            K.setNamaLengkap(txtKRName.getText());
+            K.setDepartemen(txtKRDept.getSelectedItem().toString());
+            KaryawanService service = new KaryawanService();
+            service.tambahKaryawan(K);
+            showData("");
+        } else {
+            //beri info untuk melengkapi kotak isian
+        }
     }//GEN-LAST:event_btnSaveActionPerformed
 
     private void btnUpdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUpdateActionPerformed
-        Karyawan K = new Karyawan();
-        K.setUidRfid(txtUID.getText());
-        K.setIdKaryawan(txtKRID.getText());
-        K.setNamaLengkap(txtKRName.getText());
-        K.setDepartemen(txtKRDept.getSelectedItem().toString());
-        KaryawanService service = new KaryawanService();
-        service.updateKaryawan(K);
-        refresAll();
+        if (!txtUID.getText().isEmpty() && !txtKRID.getText().isEmpty() && !txtKRName.getText().isEmpty()) {
+            KR.setUidRfid(txtUID.getText().equals(KR.getUidRfid()) ? KR.getUidRfid() : SecurityUtils.getHash(txtUID.getText(), SecurityUtils.SHA_256));
+            KR.setIdKaryawan(EncryptionUtils.encrypt(txtKRID.getText()).equals(KR.getIdKaryawan()) ? KR.getIdKaryawan() : EncryptionUtils.encrypt(txtKRID.getText()));
+            KR.setNamaLengkap(txtKRName.getText());
+            KR.setDepartemen(txtKRDept.getSelectedItem().toString());
+            KaryawanService service = new KaryawanService();
+            service.updateKaryawan(KR);
+            refresAll();
+        } else {
+            //beri info untuk melengkapi kotak isian
+        }
     }//GEN-LAST:event_btnUpdateActionPerformed
 
     private void btnRefreshActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRefreshActionPerformed
